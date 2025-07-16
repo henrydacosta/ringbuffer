@@ -41,6 +41,10 @@ This build this library, you will need:
 
 - A C++11 or higher compiler that CMake can use.
 
+- Optionally, [Doxygen](https://www.doxygen.nl/index.html), if you want to build
+the docs. The CMake configuration files automatically build the docs if CMake is
+installed.
+
 - An internet connection.
 
 This library comes with unit tests. The unit tests use
