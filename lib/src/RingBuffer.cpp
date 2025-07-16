@@ -429,7 +429,7 @@ std::size_t RingBuffer::_readBytes(void *destination, std::size_t count,
 void RingBuffer::_assertValid() const {
     assert(_buffer != nullptr);
     assert(_size > 0);
-    assert(_read < _size || _read == _size && _write == 0);
+    assert(_read < _size || (_read == _size && _write == 0));
     assert(_write <= _size);
     assert(_read != _write);
 }
