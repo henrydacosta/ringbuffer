@@ -37,7 +37,7 @@ item type and buffer size combination, depending on the compiler.
 
 This build this library, you will need:
 
-- [CMake](https://cmake.org/), version 3.19 or higher.
+- [CMake](https://cmake.org/), version 3.11 or higher.
 
 - A C++11 or higher compiler that CMake can use.
 
