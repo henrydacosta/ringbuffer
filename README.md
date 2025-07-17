@@ -60,6 +60,14 @@ cmake -B build .
 cmake --build build 
 ```
 
+If you want to generate the internal version of the docs, with implementation
+details, do this instead:
+
+```shell
+cmake -DDOXYGEN_INTERNAL_DOCS=YES -B build .
+cmake --build build 
+```
+
 The author has successfully built this project in the following environments:
 
 | Compiler     | CMake  | IDE                | OS              |
