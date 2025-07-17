@@ -42,8 +42,8 @@ This build this library, you will need:
 - A C++11 or higher compiler that CMake can use.
 
 - Optionally, [Doxygen](https://www.doxygen.nl/index.html), if you want to build
-the docs. The CMake configuration files automatically build the docs if CMake is
-installed.
+the docs. The CMake configuration files automatically build the docs if Doxygen
+is installed.
 
 - An internet connection.
 
@@ -51,14 +51,17 @@ This library comes with unit tests. The unit tests use
 [GoogleTest](https://github.com/google/googletest). The CMake configuration
 files automatically get GoogleTest from GitHub and build the software.
 
-If you have all the prerequisites, you can issue the following shell commands
-from the directory where you cloned this project to build the library and unit
-tests:
+If you have all the prerequisites and want to build the library, unit tests and
+documentation, you can issue the following shell commands from the directory
+where you cloned this project:
 
 ```shell
 cmake -B build .
 cmake --build build 
 ```
+
+**build** is the directory where the build files will go, you can choose a
+different name.
 
 If you want to generate the internal version of the docs, with implementation
 details, do this instead:
