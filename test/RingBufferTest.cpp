@@ -38,15 +38,9 @@ class RingBufferTest : public testing::Test {
 protected:
     RingBufferTest() : m_ring_buffer(m_buffer.data(), BUFFER_SIZE) {}
 
-#if 1
     static const size_t ZERO_SIZE = 0;
     static const size_t BUFFER_SIZE = 100;
     static const size_t EXTRA_BUFFER_SIZE = 3;
-#else
-    static const size_t ZERO_SIZE;
-    static const size_t BUFFER_SIZE;
-    static const size_t EXTRA_BUFFER_SIZE;
-#endif
 
     array<int8_t, BUFFER_SIZE + EXTRA_BUFFER_SIZE> m_check_buffer;
     array<int8_t, BUFFER_SIZE + EXTRA_BUFFER_SIZE> m_read_buffer;
@@ -94,11 +88,9 @@ protected:
     }
 };
 
-#if 1
 const size_t RingBufferTest::ZERO_SIZE;
 const size_t RingBufferTest::BUFFER_SIZE;
 const size_t RingBufferTest::EXTRA_BUFFER_SIZE;
-#endif
 
 TEST_F(RingBufferTest, IsInitiallyEmpty) {
     checkState(true, false, 0, BUFFER_SIZE);
@@ -219,5 +211,157 @@ TEST_F(RingBufferTest, TestPeekPeekAt) {
             m_ring_buffer.clear();
             checkState(true, false, ZERO_SIZE, BUFFER_SIZE);
         }
+    }
+}
+
+TEST_F(RingBufferTest, TestCumulativeReadWrite) {
+    // We will do the following in sequence without any discarding or clearing
+    // in between:
+    //  - write 4 times,
+    //  - read 1 time,
+    //  - write 3 times,
+    //  - read 2 times,
+    //  - write 2 times,
+    //  - read 3 times,
+    //  - write 1 time,
+    //  - read 4 times.
+    // In each sequence, we will have written and read 10 times. At any given
+    // time, there will be at most 6 sets of data in the buffer. Therefore, we
+    // can do the sequence for sets of data having at most BUFFER_SIZE / 6
+    // bytes.
+    for (auto i = ZERO_SIZE; i < BUFFER_SIZE / 6; ++i) {
+        // Write 4 times.
+        // 1.
+        iota(m_write_buffer.begin(), m_write_buffer.begin() + i, 0);
+        testWrite(i, i);
+        checkState(i == ZERO_SIZE, false, i, BUFFER_SIZE - i);
+        // 2.
+        iota(m_write_buffer.begin(), m_write_buffer.begin() + i,
+             static_cast<int8_t>(i));
+        testWrite(i, i);
+        checkState(i == ZERO_SIZE, false, i * 2, BUFFER_SIZE - i * 2);
+        // 3.
+        iota(m_write_buffer.begin(), m_write_buffer.begin() + i,
+             static_cast<int8_t>(i * 2));
+        testWrite(i, i);
+        checkState(i == ZERO_SIZE, false, i * 3, BUFFER_SIZE - i * 3);
+        // 4.
+        iota(m_write_buffer.begin(), m_write_buffer.begin() + i,
+             static_cast<int8_t>(i * 3));
+        testWrite(i, i);
+        checkState(i == ZERO_SIZE, false, i * 4, BUFFER_SIZE - i * 4);
+
+        // Read 1 time.
+        fill(m_read_buffer.begin(), m_read_buffer.end(), -1);
+        iota(m_check_buffer.begin(), m_check_buffer.begin() + i, 0);
+        fill(m_check_buffer.begin() + i, m_check_buffer.end(), -1);
+        testRead(i, i);
+        checkState(i == ZERO_SIZE, false, i * 3, BUFFER_SIZE - i * 3);
+
+        // Write 3 times.
+        // 1.
+        iota(m_write_buffer.begin(), m_write_buffer.begin() + i,
+             static_cast<int8_t>(i * 4));
+        testWrite(i, i);
+        checkState(i == ZERO_SIZE, false, i * 4, BUFFER_SIZE - i * 4);
+        // 2.
+        iota(m_write_buffer.begin(), m_write_buffer.begin() + i,
+             static_cast<int8_t>(i * 5));
+        testWrite(i, i);
+        checkState(i == ZERO_SIZE, false, i * 5, BUFFER_SIZE - i * 5);
+        // 3.
+        iota(m_write_buffer.begin(), m_write_buffer.begin() + i,
+             static_cast<int8_t>(i * 6));
+        testWrite(i, i);
+        checkState(i == ZERO_SIZE, BUFFER_SIZE % 6 == 0, i * 6,
+                   BUFFER_SIZE - i * 6);
+
+        // Read 2 times.
+        // 1.
+        fill(m_read_buffer.begin(), m_read_buffer.end(), -1);
+        iota(m_check_buffer.begin(), m_check_buffer.begin() + i,
+             static_cast<int8_t>(i));
+        fill(m_check_buffer.begin() + i, m_check_buffer.end(), -1);
+        testRead(i, i);
+        checkState(i == ZERO_SIZE, false, i * 5, BUFFER_SIZE - i * 5);
+        // 2.
+        fill(m_read_buffer.begin(), m_read_buffer.end(), -1);
+        iota(m_check_buffer.begin(), m_check_buffer.begin() + i,
+             static_cast<int8_t>(i * 2));
+        fill(m_check_buffer.begin() + i, m_check_buffer.end(), -1);
+        testRead(i, i);
+        checkState(i == ZERO_SIZE, false, i * 4, BUFFER_SIZE - i * 4);
+
+        // Write 2 times.
+        // 1.
+        iota(m_write_buffer.begin(), m_write_buffer.begin() + i,
+             static_cast<int8_t>(i * 7));
+        testWrite(i, i);
+        checkState(i == ZERO_SIZE, false, i * 5, BUFFER_SIZE - i * 5);
+        // 2.
+        iota(m_write_buffer.begin(), m_write_buffer.begin() + i,
+             static_cast<int8_t>(i * 8));
+        testWrite(i, i);
+        checkState(i == ZERO_SIZE, BUFFER_SIZE % 6 == 0, i * 6,
+                   BUFFER_SIZE - i * 6);
+
+        // Read 3 times.
+        // 1.
+        fill(m_read_buffer.begin(), m_read_buffer.end(), -1);
+        iota(m_check_buffer.begin(), m_check_buffer.begin() + i,
+             static_cast<int8_t>(i * 3));
+        fill(m_check_buffer.begin() + i, m_check_buffer.end(), -1);
+        testRead(i, i);
+        checkState(i == ZERO_SIZE, false, i * 5, BUFFER_SIZE - i * 5);
+        // 2.
+        fill(m_read_buffer.begin(), m_read_buffer.end(), -1);
+        iota(m_check_buffer.begin(), m_check_buffer.begin() + i,
+             static_cast<int8_t>(i * 4));
+        fill(m_check_buffer.begin() + i, m_check_buffer.end(), -1);
+        testRead(i, i);
+        checkState(i == ZERO_SIZE, false, i * 4, BUFFER_SIZE - i * 4);
+        // 3.
+        fill(m_read_buffer.begin(), m_read_buffer.end(), -1);
+        iota(m_check_buffer.begin(), m_check_buffer.begin() + i,
+             static_cast<int8_t>(i * 5));
+        fill(m_check_buffer.begin() + i, m_check_buffer.end(), -1);
+        testRead(i, i);
+        checkState(i == ZERO_SIZE, false, i * 3, BUFFER_SIZE - i * 3);
+
+        // Write 1 time.
+        iota(m_write_buffer.begin(), m_write_buffer.begin() + i,
+             static_cast<int8_t>(i * 9));
+        testWrite(i, i);
+        checkState(i == ZERO_SIZE, false, i * 4, BUFFER_SIZE - i * 4);
+
+        // Read 4 times.
+        // 1.
+        fill(m_read_buffer.begin(), m_read_buffer.end(), -1);
+        iota(m_check_buffer.begin(), m_check_buffer.begin() + i,
+             static_cast<int8_t>(i * 6));
+        fill(m_check_buffer.begin() + i, m_check_buffer.end(), -1);
+        testRead(i, i);
+        checkState(i == ZERO_SIZE, false, i * 3, BUFFER_SIZE - i * 3);
+        // 2.
+        fill(m_read_buffer.begin(), m_read_buffer.end(), -1);
+        iota(m_check_buffer.begin(), m_check_buffer.begin() + i,
+             static_cast<int8_t>(i * 7));
+        fill(m_check_buffer.begin() + i, m_check_buffer.end(), -1);
+        testRead(i, i);
+        checkState(i == ZERO_SIZE, false, i * 2, BUFFER_SIZE - i * 2);
+        // 3.
+        fill(m_read_buffer.begin(), m_read_buffer.end(), -1);
+        iota(m_check_buffer.begin(), m_check_buffer.begin() + i,
+             static_cast<int8_t>(i * 8));
+        fill(m_check_buffer.begin() + i, m_check_buffer.end(), -1);
+        testRead(i, i);
+        checkState(i == ZERO_SIZE, false, i, BUFFER_SIZE - i);
+        // 4.
+        fill(m_read_buffer.begin(), m_read_buffer.end(), -1);
+        iota(m_check_buffer.begin(), m_check_buffer.begin() + i,
+             static_cast<int8_t>(i * 9));
+        fill(m_check_buffer.begin() + i, m_check_buffer.end(), -1);
+        testRead(i, i);
+        checkState(true, false, 0, BUFFER_SIZE);
     }
 }
