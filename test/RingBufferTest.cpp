@@ -229,7 +229,7 @@ TEST_F(RingBufferTest, TestCumulativeReadWrite) {
     // time, there will be at most 6 sets of data in the buffer. Therefore, we
     // can do the sequence for sets of data having at most BUFFER_SIZE / 6
     // bytes.
-    for (auto i = ZERO_SIZE; i < BUFFER_SIZE / 6; ++i) {
+    for (auto i = ZERO_SIZE; i <= BUFFER_SIZE / 6; ++i) {
         // Write 4 times.
         // 1.
         iota(m_write_buffer.begin(), m_write_buffer.begin() + i, 0);
@@ -273,7 +273,8 @@ TEST_F(RingBufferTest, TestCumulativeReadWrite) {
         iota(m_write_buffer.begin(), m_write_buffer.begin() + i,
              static_cast<int8_t>(i * 6));
         testWrite(i, i);
-        checkState(i == ZERO_SIZE, BUFFER_SIZE % 6 == 0, i * 6,
+        checkState(i == ZERO_SIZE,
+                   i == BUFFER_SIZE / 6 && BUFFER_SIZE % 6 == 0, i * 6,
                    BUFFER_SIZE - i * 6);
 
         // Read 2 times.
@@ -302,7 +303,8 @@ TEST_F(RingBufferTest, TestCumulativeReadWrite) {
         iota(m_write_buffer.begin(), m_write_buffer.begin() + i,
              static_cast<int8_t>(i * 8));
         testWrite(i, i);
-        checkState(i == ZERO_SIZE, BUFFER_SIZE % 6 == 0, i * 6,
+        checkState(i == ZERO_SIZE,
+                   i == BUFFER_SIZE / 6 && BUFFER_SIZE % 6 == 0, i * 6,
                    BUFFER_SIZE - i * 6);
 
         // Read 3 times.
