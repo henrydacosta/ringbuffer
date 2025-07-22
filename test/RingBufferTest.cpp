@@ -273,8 +273,7 @@ TEST_F(RingBufferTest, TestCumulativeReadWrite) {
         iota(m_write_buffer.begin(), m_write_buffer.begin() + i,
              static_cast<int8_t>(i * 6));
         testWrite(i, i);
-        checkState(i == ZERO_SIZE,
-                   i == BUFFER_SIZE / 6 && BUFFER_SIZE % 6 == 0, i * 6,
+        checkState(i == ZERO_SIZE, i * 6 == BUFFER_SIZE, i * 6,
                    BUFFER_SIZE - i * 6);
 
         // Read 2 times.
@@ -303,8 +302,7 @@ TEST_F(RingBufferTest, TestCumulativeReadWrite) {
         iota(m_write_buffer.begin(), m_write_buffer.begin() + i,
              static_cast<int8_t>(i * 8));
         testWrite(i, i);
-        checkState(i == ZERO_SIZE,
-                   i == BUFFER_SIZE / 6 && BUFFER_SIZE % 6 == 0, i * 6,
+        checkState(i == ZERO_SIZE, i * 6 == BUFFER_SIZE, i * 6,
                    BUFFER_SIZE - i * 6);
 
         // Read 3 times.
