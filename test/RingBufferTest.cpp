@@ -39,7 +39,7 @@ protected:
     RingBufferTest() : m_ring_buffer(m_buffer.data(), BUFFER_SIZE) {}
 
     static const size_t ZERO_SIZE = 0;
-    static const size_t BUFFER_SIZE = 100;
+    static const size_t BUFFER_SIZE = 96;
     static const size_t EXTRA_BUFFER_SIZE = 3;
 
     array<int8_t, BUFFER_SIZE + EXTRA_BUFFER_SIZE> m_check_buffer;
