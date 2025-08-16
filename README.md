@@ -88,11 +88,11 @@ cmake <b>-DDOXYGEN_INTERNAL_DOCS=YES</b> -B build .
 
 The notable outputs from the build are:
 
-| File                                                     | Description                                                                 |
-| -------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| build/lib[/<i>Configuration</i>]/[lib]ringbuffer.[lib|a] | The ring buffer library, where *Configuration* is **Debug** or **Release**. |
-| build/test[/<i>Configuration</i>]/ringbuffertest[.exe]   | The ring buffer test application.                                           |
-| build/docs/html/index.html                               | The Doxygen-generated help start page.                                      |
+| File                                                      | Description                                                                 |
+| --------------------------------------------------------- | --------------------------------------------------------------------------- |
+| build/lib[/<i>Configuration</i>]/[lib]ringbuffer.[lib\|a] | The ring buffer library, where *Configuration* is **Debug** or **Release**. |
+| build/test[/<i>Configuration</i>]/ringbuffertest[.exe]    | The ring buffer test application.                                           |
+| build/docs/html/index.html                                | The Doxygen-generated help start page.                                      |
 
 The author has successfully built this project in the following environments:
 
