@@ -87,7 +87,7 @@ cmake <b>-DDOXYGEN_INTERNAL_DOCS=YES</b> -B build .
 </pre>
 
 Add `-DDOXYGEN_EXTRACT_PRIVATE=YES` if you want to include private members in
-the generated docuemntation.
+the generated documentation.
 
 The author has successfully built this project in the following environments:
 
