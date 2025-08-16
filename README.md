@@ -86,13 +86,8 @@ with
 cmake <b>-DDOXYGEN_INTERNAL_DOCS=YES</b> -B build .
 </pre>
 
-The notable outputs from the build are:
-
-| File                                                      | Description                                                                 |
-| --------------------------------------------------------- | --------------------------------------------------------------------------- |
-| build/lib[/<i>Configuration</i>]/[lib]ringbuffer.[lib\|a] | The ring buffer library, where *Configuration* is **Debug** or **Release**. |
-| build/test[/<i>Configuration</i>]/ringbuffertest[.exe]    | The ring buffer test application.                                           |
-| build/docs/html/index.html                                | The Doxygen-generated help start page.                                      |
+Add `-DDOXYGEN_EXTRACT_PRIVATE=YES` if you want to include private members in
+the generated docuemntation.
 
 The author has successfully built this project in the following environments:
 
