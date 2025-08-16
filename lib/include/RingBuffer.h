@@ -42,20 +42,26 @@ namespace ringbuffer {
  *
  * Adapts a client-supplied buffer into a ring buffer.
  *
- * @note Uses <tt>std::memcpy()</tt> to copy data.
+ * @note
+ * Uses <tt>std::memcpy()</tt> to copy data.
  *
- * @warning The client code must not reuse or delete the supplied buffer memory
- * for the lifetime of the ring buffer.
+ * @warning
+ * The client code must not reuse or delete the supplied buffer memory for the
+ * lifetime of the ring buffer.
  *
- * @warning The client code is responsible for synchronization.
+ * @warning
+ * The client code is responsible for synchronization.
  */
 class RingBuffer {
 public:
     /**
      * Ring buffer constructor.
      *
-     * @param[in] buffer The buffer to adapt into a ring buffer.
-     * @param[in] size The size of the buffer in bytes.
+     * @param[in] buffer
+     * The buffer to adapt into a ring buffer.
+     *
+     * @param[in] size
+     * The size of the buffer in bytes.
      */
     RingBuffer(void *buffer, std::size_t size)
         : _buffer(static_cast<char *>(buffer)), _size(size), _read(size),
@@ -102,13 +108,18 @@ public:
     /**
      * Reads bytes from the ring buffer into a destination buffer.
      *
-     * @param[out] destination The destination buffer.
-     * @param[in] count The number of bytes to read.
+     * @param[out] destination
+     * The destination buffer.
+     * 
+     * @param[in] count
+     * The number of bytes to read.
      *
-     * @return The number of bytes read.
+     * @return
+     * The number of bytes read.
      *
-     * @note The number of bytes read may be less than the number requested if
-     * the ring buffer becomes empty.
+     * @note
+     * The number of bytes read may be less than the number requested if the
+     * ring buffer becomes empty.
      */
     std::size_t readBytes(void *destination, std::size_t count) {
         assert(destination != nullptr);
@@ -118,25 +129,32 @@ public:
     /**
      * Writes bytes from a source buffer into the ring buffer.
      *
-     * @param[in] source The source buffer.
-     * @param[in] count The number of bytes to write.
+     * @param[in] source
+     * The source buffer.
+     * 
+     * @param[in] count
+     * The number of bytes to write.
      *
      * @return The number of bytes written.
      *
-     * @note The number of bytes written may be less than the number requested
-     * if the ring buffer becomes full.
+     * @note
+     * The number of bytes written may be less than the number requested if the
+     * ring buffer becomes full.
      */
     std::size_t writeBytes(const void *source, std::size_t count);
 
     /**
      * Discards bytes from the ring buffer.
      *
-     * @param[in] count The number of bytes to discard.
+     * @param[in] count
+     * The number of bytes to discard.
      *
-     * @return The number of bytes discarded.
+     * @return
+     * The number of bytes discarded.
      *
-     * @note The number of bytes discarded may be less than the number requested
-     * if the ring buffer becomes empty.
+     * @note
+     * The number of bytes discarded may be less than the number requested if
+     * the ring buffer becomes empty.
      */
     std::size_t discardBytes(std::size_t count) {
         return _readBytes(nullptr, count, _read, _write);
@@ -146,13 +164,18 @@ public:
      * Reads bytes from the ring buffer into a destination buffer without
      * removing the bytes from the ring buffer.
      *
-     * @param[out] destination The destination buffer.
-     * @param[in] count The number of bytes to peek.
+     * @param[out] destination
+     * The destination buffer.
+     * 
+     * @param[in] count
+     * The number of bytes to peek.
      *
-     * @return The number of bytes peeked.
+     * @return
+     * The number of bytes peeked.
      *
-     * @note The number of bytes peeked may be less than the number requested if
-     * the ring buffer becomes empty.
+     * @note
+     * The number of bytes peeked may be less than the number requested if the
+     * ring buffer becomes empty.
      */
     std::size_t peekBytes(void *destination, std::size_t count) {
         assert(destination != nullptr);
@@ -166,15 +189,21 @@ public:
      * given offset in the ring buffer without removing the bytes from the ring
      * buffer.
      *
-     * @param[out] destination The destination buffer.
-     * @param[in] count The number of bytes to peek.
-     * @param[in] where The offset relative to the first byte in the ring
-     * buffer.
+     * @param[out] destination
+     * The destination buffer.
+     * 
+     * @param[in] count
+     * The number of bytes to peek.
+     * 
+     * @param[in] where
+     * The offset relative to the first byte in the ring buffer.
      *
-     * @return The number of bytes peeked.
+     * @return
+     * The number of bytes peeked.
      *
-     * @note The number of bytes peeked may be less than the number requested if
-     * the ring buffer becomes empty.
+     * @note
+     * The number of bytes peeked may be less than the number requested if the
+     * ring buffer becomes empty.
      */
     std::size_t peekBytesAt(void *destination, std::size_t count,
                             std::size_t where) {
@@ -207,15 +236,23 @@ private:
      * Reads bytes from the ring buffer into a destination buffer or discards
      * bytes from the ring buffer if no destination buffer is provided.
      *
-     * @param[out] destination The destination buffer to read into or @c nullptr
-     * to discard.
-     * @param[in] count The number of bytes to read or discard.
-     * @param[in,out] read The index of the next byte to read.
-     * @param[in,out] write The index of the next byte to write.
+     * @param[out] destination
+     * The destination buffer to read into or @c nullptr to discard.
+     * 
+     * @param[in] count
+     * The number of bytes to read or discard.
+     * 
+     * @param[in,out] read
+     * The index of the next byte to read.
+     * 
+     * @param[in,out] write
+     * The index of the next byte to write.
      *
-     * @return The number of bytes read or discarded.
+     * @return
+     * The number of bytes read or discarded.
      *
-     * @note The number of bytes read or discarded may be less than the number
+     * @note
+     * The number of bytes read or discarded may be less than the number
      * requested if the ring buffer becomes empty.
      */
     std::size_t _readBytes(void *destination, std::size_t count,
