@@ -35,15 +35,15 @@ item type and buffer size combination, depending on the compiler.
 
 ## How to Build It
 
-This build this library, you will need:
+To build this library, you will need:
 
 - [CMake](https://cmake.org/), version 3.11 or higher.
 
 - A C++11 or higher compiler that CMake can use.
 
 - Optionally, [Doxygen](https://www.doxygen.nl/index.html), if you want to build
-the docs. The CMake configuration files automatically build the docs if Doxygen
-is installed.
+  the docs. The CMake configuration files automatically build the docs if you
+  have Doxygen installed.
 
 - An internet connection.
 
@@ -55,31 +55,72 @@ If you have all the prerequisites and want to build the library, unit tests and
 documentation, you can issue the following shell commands from the directory
 where you cloned this project:
 
-```shell
+<pre>
 cmake -B build .
 cmake --build build 
-```
+</pre>
 
-**build** is the directory where the build files will go, you can choose a
-different name.
+The default configuration is **Debug**. To build the **Release** version,
+replace
+
+<pre>
+cmake --build build
+</pre>
+
+with
+
+<pre>
+cmake --build build <b>--config Release</b>
+</pre>
 
 If you want to generate the internal version of the docs, with implementation
-details, do this instead:
+details, replace
 
-```shell
-cmake -DDOXYGEN_INTERNAL_DOCS=YES -B build .
-cmake --build build 
-```
+<pre>
+cmake -B build .
+</pre>
+
+with
+
+<pre>
+cmake <b>-DDOXYGEN_INTERNAL_DOCS=YES</b> -B build .
+</pre>
+
+The notable outputs from the build are:
+
+| File                                                     | Description                                                                 |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| build/lib[/<i>Configuration</i>]/[lib]ringbuffer.[lib|a] | The ring buffer library, where *Configuration* is **Debug** or **Release**. |
+| build/test[/<i>Configuration</i>]/ringbuffertest[.exe]   | The ring buffer test application.                                           |
+| build/docs/html/index.html                               | The Doxygen-generated help start page.                                      |
 
 The author has successfully built this project in the following environments:
 
-| Compiler     | CMake  | IDE                | OS              |
-| ------------ | ------ | ------------------ | --------------- |
-| MSVC 19.44   | 4.1.0  | Visual Studio 2022 | Windows 11      |
-| Clang 19.1.5 | 4.1.0  | Visual Studio Code | Windows 11      |
-| Clang 10.0.0 | 4.0.3  | (Bash)             | Ubuntu 20.04    |
-| GNU 13.3.0   | 3.28.3 | (Bash)             | Linux Mint 22.1 |
-
+<table>
+    <tr>
+        <th>Compiler</th>
+        <th>CMake</th>
+        <th>OS</th>
+    </tr>
+    <tr>
+        <td>MSVC 19.44</td>
+        <td rowspan="2">4.1.0</td>
+        <td rowspan="2">Windows 11</td>
+    </tr>
+    <tr>
+        <td>Clang 19.1.5</td>
+    </tr>
+    <tr>
+        <td>Clang 10.0.0</td>
+        <td>4.0.3</td>
+        <td>Ubuntu 20.04</td>
+    </tr>
+    <tr>
+        <td>GNU 13.3.0</td>
+        <td>3.28.3</td>
+        <td>Linux Mint 22.1</td>
+    </tr>
+</table>
 
 ## How to Use It
 
